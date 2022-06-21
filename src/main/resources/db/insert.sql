@@ -1,0 +1,1 @@
+insert into passports values (1, 2208, 206450, '29.01.2009','Anton', 'S');
