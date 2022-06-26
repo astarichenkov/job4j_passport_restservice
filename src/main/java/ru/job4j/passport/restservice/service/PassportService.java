@@ -7,7 +7,6 @@ import ru.job4j.passport.restservice.repository.PassportRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PassportService {
@@ -25,6 +24,19 @@ public class PassportService {
     }
 
     public Passport save(Passport passport) {
+        LocalDate birthDate = passport.getBirthDate();
+        int years = LocalDate.now().getYear() - birthDate.getYear();
+        LocalDate expireDate = LocalDate.now();
+        if (years < 20) {
+            expireDate = birthDate.plusYears(20);
+        }
+        if (years >= 20 && years < 45) {
+            expireDate = birthDate.plusYears(45);
+        }
+        if (years >= 45) {
+            expireDate = LocalDate.of(2200, 1, 1);
+        }
+        passport.setExpireDate(expireDate);
         return passports.save(passport);
     }
 
@@ -38,7 +50,7 @@ public class PassportService {
         passports.deleteById(id);
     }
 
-    public Optional<Passport> findBySeries(Integer series) {
+    public List<Passport> findBySeries(Integer series) {
         return passports.findBySeries(series);
     }
 

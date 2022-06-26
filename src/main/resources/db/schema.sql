@@ -4,12 +4,13 @@ create table if not exists passports
     constraint passports_pkey
     primary key,
     series       integer,
-    num          bigserial,
+    number          bigserial,
     release_date timestamp,
     firstname    varchar(255),
     lastname     varchar(255),
     birth_date   date,
-    expire_date  date
+    expire_date  date,
+    unique(series, number)
     );
 
 create table if not exists address
