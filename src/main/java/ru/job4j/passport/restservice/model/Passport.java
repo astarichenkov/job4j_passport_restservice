@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -29,9 +28,6 @@ public class Passport {
     private String lastname;
     private LocalDate birthDate;
 
-    @OneToMany
-    private List<Address> registrationAddress;
-
     @Override
     public String toString() {
         return "Passport{"
@@ -41,8 +37,6 @@ public class Passport {
                 + ", releaseDate=" + releaseDate
                 + ", firstname='" + firstname + '\''
                 + ", lastname='" + lastname + '\''
-                + ", registrationAddress='" + registrationAddress + '\''
-                + ", addresses=" + registrationAddress
                 + '}';
     }
 }

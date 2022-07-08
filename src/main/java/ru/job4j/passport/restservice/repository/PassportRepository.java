@@ -13,6 +13,6 @@ public interface PassportRepository extends CrudRepository<Passport, Long> {
 
     List<Passport> findByExpireDateIsLessThan(LocalDate expireDate);
 
-    List<Passport> findByExpireDateGreaterThanAndExpireDateLessThan(LocalDate expireDate, LocalDate expireDate1);
+    List<Passport> findByExpireDateGreaterThanAndExpireDateLessThan(LocalDate currentDate, LocalDate expireDate);
 
 }

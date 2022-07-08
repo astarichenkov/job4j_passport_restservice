@@ -11,15 +11,15 @@ import java.util.List;
 @Service
 public class PassportService {
 
-    private final PassportRepository passports;
+    private final PassportRepository passportRepository;
 
     public PassportService(PassportRepository passports) {
-        this.passports = passports;
+        this.passportRepository = passports;
     }
 
     public List<Passport> findAll() {
         List<Passport> rsl = new ArrayList<>();
-        passports.findAll().forEach(rsl::add);
+        passportRepository.findAll().forEach(rsl::add);
         return rsl;
     }
 
@@ -37,28 +37,32 @@ public class PassportService {
             expireDate = LocalDate.of(2200, 1, 1);
         }
         passport.setExpireDate(expireDate);
-        return passports.save(passport);
+        return passportRepository.save(passport);
     }
 
     public Passport update(Passport passport) {
-        Passport oldPassport = passports.findById(passport.getId()).get();
-        oldPassport.setRegistrationAddress(passport.getRegistrationAddress());
-        return passports.save(oldPassport);
+        Passport oldPassport = passportRepository.findById(passport.getId()).get();
+        oldPassport.setFirstname(passport.getFirstname());
+        oldPassport.setLastname(passport.getLastname());
+        oldPassport.setBirthDate(passport.getBirthDate());
+        oldPassport.setSeries(passport.getSeries());
+        oldPassport.setNumber(passport.getNumber());
+        return passportRepository.save(oldPassport);
     }
 
     public void delete(Long id) {
-        passports.deleteById(id);
+        passportRepository.deleteById(id);
     }
 
     public List<Passport> findBySeries(Integer series) {
-        return passports.findBySeries(series);
+        return passportRepository.findBySeries(series);
     }
 
     public List<Passport> expiredPassports() {
-        return passports.findByExpireDateIsLessThan(LocalDate.now());
+        return passportRepository.findByExpireDateIsLessThan(LocalDate.now());
     }
 
     public List<Passport> findReplaceablePassports() {
-        return passports.findByExpireDateGreaterThanAndExpireDateLessThan(LocalDate.now(), LocalDate.now().plusMonths(3));
+        return passportRepository.findByExpireDateGreaterThanAndExpireDateLessThan(LocalDate.now(), LocalDate.now().plusMonths(3));
     }
 }
