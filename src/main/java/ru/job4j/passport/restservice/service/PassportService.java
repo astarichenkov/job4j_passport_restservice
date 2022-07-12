@@ -7,6 +7,8 @@ import ru.job4j.passport.restservice.repository.PassportRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class PassportService {
@@ -24,6 +26,10 @@ public class PassportService {
     }
 
     public Passport save(Passport passport) {
+        if (passportRepository.findByNumberAndSeries(passport.getNumber(), passport.getSeries()).isPresent()) {
+            throw new IllegalArgumentException("passport with such a series and number already exists");
+        }
+
         LocalDate birthDate = passport.getBirthDate();
         int years = LocalDate.now().getYear() - birthDate.getYear();
         LocalDate expireDate = LocalDate.now();
@@ -41,7 +47,13 @@ public class PassportService {
     }
 
     public Passport update(Passport passport) {
-        Passport oldPassport = passportRepository.findById(passport.getId()).get();
+        Passport oldPassport;
+        Optional<Passport> opt = passportRepository.findById(passport.getId());
+                if (opt.isEmpty()) {
+                    throw new NoSuchElementException("passport not found by id");
+                } else {
+                    oldPassport = opt.get();
+                }
         oldPassport.setFirstname(passport.getFirstname());
         oldPassport.setLastname(passport.getLastname());
         oldPassport.setBirthDate(passport.getBirthDate());
@@ -51,6 +63,9 @@ public class PassportService {
     }
 
     public void delete(Long id) {
+        if (passportRepository.findById(id).isEmpty()) {
+                throw new NoSuchElementException("passport not found by id");
+        }
         passportRepository.deleteById(id);
     }
 

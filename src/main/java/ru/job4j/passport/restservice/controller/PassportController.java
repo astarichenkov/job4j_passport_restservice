@@ -15,50 +15,44 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PassportController {
 
-    private final PassportService passports;
+    private final PassportService passportService;
 
     @GetMapping(value = "/find", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Passport>> findBySeries(@RequestParam(name = "series", required = false) Integer series) {
         if (series == null) {
-            return new ResponseEntity<>(passports.findAll(), HttpStatus.OK);
+            return new ResponseEntity<>(passportService.findAll(), HttpStatus.OK);
         }
-        return new ResponseEntity<>(passports.findBySeries(series), HttpStatus.OK);
+        return new ResponseEntity<>(passportService.findBySeries(series), HttpStatus.OK);
     }
 
     @PostMapping("/save")
     public ResponseEntity<Passport> save(@RequestBody Passport passport) {
-        return new ResponseEntity<>(passports.save(passport), HttpStatus.OK);
+        return new ResponseEntity<>(passportService.save(passport), HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<Void> update(@RequestBody Passport passport, @PathVariable Long id) {
         passport.setId(id);
-        this.passports.save(passport);
+        this.passportService.update(passport);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        try {
-            passports.delete(id);
+            passportService.delete(id);
             return new ResponseEntity<>(
                     HttpStatus.OK
             );
-        } catch (Throwable e) {
-            return new ResponseEntity<>(
-                    HttpStatus.BAD_REQUEST
-            );
-        }
     }
 
     @GetMapping("/unavailable")
     public ResponseEntity<List<Passport>> findExpiredPassports() {
-        return new ResponseEntity<>(passports.expiredPassports(), HttpStatus.OK);
+        return new ResponseEntity<>(passportService.expiredPassports(), HttpStatus.OK);
     }
 
     @GetMapping("/find-replaceable")
     public ResponseEntity<List<Passport>> findReplaceablePassports() {
-        return new ResponseEntity<>(passports.findReplaceablePassports(), HttpStatus.OK);
+        return new ResponseEntity<>(passportService.findReplaceablePassports(), HttpStatus.OK);
     }
 
 }
