@@ -5,7 +5,6 @@ import ru.job4j.passport.restservice.model.Passport;
 import ru.job4j.passport.restservice.repository.PassportRepository;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -20,9 +19,7 @@ public class PassportService {
     }
 
     public List<Passport> findAll() {
-        List<Passport> rsl = new ArrayList<>();
-        passportRepository.findAll().forEach(rsl::add);
-        return rsl;
+        return passportRepository.findAll();
     }
 
     public Passport save(Passport passport) {
@@ -49,11 +46,11 @@ public class PassportService {
     public Passport update(Passport passport) {
         Passport oldPassport;
         Optional<Passport> opt = passportRepository.findById(passport.getId());
-                if (opt.isEmpty()) {
-                    throw new NoSuchElementException("passport not found by id");
-                } else {
-                    oldPassport = opt.get();
-                }
+        if (opt.isEmpty()) {
+            throw new NoSuchElementException("passport not found by id");
+        } else {
+            oldPassport = opt.get();
+        }
         oldPassport.setFirstname(passport.getFirstname());
         oldPassport.setLastname(passport.getLastname());
         oldPassport.setBirthDate(passport.getBirthDate());
@@ -64,7 +61,7 @@ public class PassportService {
 
     public void delete(Long id) {
         if (passportRepository.findById(id).isEmpty()) {
-                throw new NoSuchElementException("passport not found by id");
+            throw new NoSuchElementException("passport not found by id");
         }
         passportRepository.deleteById(id);
     }
